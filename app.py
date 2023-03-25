@@ -5,11 +5,49 @@ from io import BytesIO
 import numpy as np 
 import cv2
 import base64
+import pytesseract
+import re
 
 app = Flask(__name__)
 
+pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
+def letterify(input):
+  l2=[]
+  for idx,i in enumerate(input):
+    if i.isalpha()==True or i.isspace()==True:
+      l2.append(i)
+  return ''.join(l2)
+
+
 def Custom_OCR(full_path):
-    return {"Salt":1.23,"Milk":2.33,"Tax:":0.66}
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    text = pytesseract.image_to_string(gray)
+    # Preprocessing the text starts
+    list1 = [l.split(' ') for l in text.splitlines()]
+    #gets purchased items of the bill
+
+    items={}
+    for li in list1:
+    if re.search("^\d+\.",li[-1])!=None and re.search("[a-z A-Z]",li[0])!= None:
+        items[' '.join(li[0:-1])] = float(li[-1])
+
+
+    removal_list=[]
+    add_to = {}
+    for key,v in items.items():
+    if all(chr.isalpha() or chr.isspace() for chr in key)==False:
+      add_to[letterify(key)]=v
+      removal_list.append(key)
+    if "SUBTOTAL" in key or "CASH" in key:
+      removal_list.append(key)
+
+
+    items.update(add_to)
+    for keys in removal_list:
+    del items[keys]
+
+    return items
+    #return {"Salt":1.23,"Milk":2.33,"Tax:":0.66}
 
 @app.route('/uploadImage' , methods=['POST'])
 def uploadImage():
