@@ -1,1 +1,10 @@
-<p>login works!</p>
+<div class="w-full h-full bg-blue-100 flex">
+    <form [formGroup]="inputForm" (ngSubmit)="onSubmit($event)" class="rounded-lg flex flex-col w-[30vw] m-auto bg-neutral-50 p-2 h-[50vh] justify-center">
+        <label for="register" class="text-center w-full tracking-tight text-lg"> LOGIN </label>
+        <label for=""> Username: </label>
+        <input formControlName="user"type="text" class="rounded-sm bg-neutral-50 border-b border-neutral-600/90 focus:placeholder:text-transparent outline-none indent-1">
+        <label for=""> Password: </label>
+        <input formControlName="pass"type="text" class="rounded-sm bg-neutral-50 border-b border-neutral-600/90 focus:placeholder:text-transparent outline-none indent-1">
+        <button type="submit" class="rounded-md bg-blue-500 px-1 w-fit mx-auto my-2 text-neutral-50"> SUBMIT </button>
+    </form>
+</div>

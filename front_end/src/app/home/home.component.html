@@ -1,1 +1,10 @@
-<p>home works!</p>
+<div class="w-full h-full fixed">
+    <div class="absolute top-[1vh] left-[1vw] min-w-[200px] min-h-[100px] border border-blue-400 text-center flex justify-center text-3xl"> 
+       <h2 class="my-auto h-full w-full"> SCORE </h2>  
+    </div>
+    <form [formGroup]="uploadImage" (ngSubmit)="imageSubmit($event)" class=" mx-auto w-full h-full flex flex-col justify-center my-auto text-center items-center">
+        <label for="image"> Please Upload An Image/Pdf of your Receipt</label>
+        <input formControlName="image" type="file" name="image" id="image" (change)="onChange($event)"> <!-- what doc types are we accepting? -->
+        <button type="submit"> SUBMIT </button>
+    </form>
+</div>
