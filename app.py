@@ -10,7 +10,7 @@ import re
 
 app = Flask(__name__)
 
-pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
+pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 def letterify(input):
   l2=[]
   for idx,i in enumerate(input):
@@ -20,6 +20,7 @@ def letterify(input):
 
 
 def Custom_OCR(full_path):
+    img = cv2.imread(full_path)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     text = pytesseract.image_to_string(gray)
     # Preprocessing the text starts
@@ -28,23 +29,23 @@ def Custom_OCR(full_path):
 
     items={}
     for li in list1:
-    if re.search("^\d+\.",li[-1])!=None and re.search("[a-z A-Z]",li[0])!= None:
-        items[' '.join(li[0:-1])] = float(li[-1])
+        if re.search("^\d+\.",li[-1])!=None and re.search("[a-z A-Z]",li[0])!= None:
+            items[' '.join(li[0:-1])] = float(li[-1])
 
 
     removal_list=[]
     add_to = {}
     for key,v in items.items():
-    if all(chr.isalpha() or chr.isspace() for chr in key)==False:
-      add_to[letterify(key)]=v
-      removal_list.append(key)
-    if "SUBTOTAL" in key or "CASH" in key:
-      removal_list.append(key)
+        if all(chr.isalpha() or chr.isspace() for chr in key)==False:
+            add_to[letterify(key)]=v
+            removal_list.append(key)
+        if "SUBTOTAL" in key or "CASH" in key:
+            removal_list.append(key)
 
 
     items.update(add_to)
     for keys in removal_list:
-    del items[keys]
+        del items[keys]
 
     return items
     #return {"Salt":1.23,"Milk":2.33,"Tax:":0.66}
@@ -92,4 +93,4 @@ def uploadImage():
 
 
 if __name__ == '__main__':
-    app.run(debug = False)
+    app.run(debug = True)
