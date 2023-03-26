@@ -1,25 +1,20 @@
-from flask import Flask, render_template , request , jsonify
-from PIL import Image
-import os , io , sys
-import pymongo
-import json
-import re
-import config as cfg
 from datetime import datetime,date, timedelta
+from flask import Flask, request
 from pymongo import MongoClient
 from io import BytesIO
-import numpy as np 
-import cv2
-import base64
+from PIL import Image
+import config as cfg
 import pytesseract
+import base64
+import cv2
 import re
 
 app = Flask(__name__)
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
-cluster = MongoClient(cfg.configurations['MongoClient'])
-db=cluster[cfg.configurations['db']]
-collection = db[cfg.configurations['collection']]
+cluster     = MongoClient(cfg.configurations['MongoClient'])
+db          = cluster[cfg.configurations['db']]
+collection  = db[cfg.configurations['collection']]
 
 
 def letterify(input):
@@ -195,6 +190,7 @@ def getData():
         result = {"status": "No Data Found."}
         return result
 
+
 @app.route('/getChartData' , methods=['POST'])
 def getChartData():
     # get request
@@ -248,5 +244,6 @@ def getChartData():
         result = {"status": "No Data Found."}
         return result
     
+
 if __name__ == '__main__':
     app.run(debug = True)
