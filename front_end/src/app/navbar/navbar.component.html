@@ -1,0 +1,17 @@
+<div class="sticky top-0 left-0 w-full h-fit p-2 flex flex-row bg-blue-600 items-end" *ngIf="!hideNavBar">
+    <div class="min-w-[30vw] max-w-[70vw] ml-auto flex flex-row self-center text-neutral-50 tracking-tight">
+        <div class="hover:cursor-pointer hover:text-blue-300 text-base mx-3 flex-nowrap whitespace-nowrap text-ellipsis block "> <!-- home -->
+            <h2> Home</h2>
+        </div>
+        <div class="hover:cursor-pointer hover:text-blue-300 text-base mx-3 flex-nowrap whitespace-nowrap text-ellipsis block "> <!-- history -->
+            <h2> History </h2>
+        </div>
+        <div class="hover:cursor-pointer hover:text-blue-300 text-base mx-3 flex-nowrap whitespace-nowrap text-ellipsis block "> <!-- spending-tracker -->
+            <h2> Spending Tracker </h2>
+        </div>
+        <div class="hover:cursor-pointer hover:text-blue-300 text-base mx-3 flex-nowrap whitespace-nowrap text-ellipsis block "> <!-- logout btn -->
+            <button class="" (click)="logout($event)"> Logout </button>
+        </div>
+    </div>
+    
+</div>

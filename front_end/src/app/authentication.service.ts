@@ -5,5 +5,8 @@ import { Injectable } from '@angular/core';
 })
 export class AuthenicationService {
 
+  private _signedIn:boolean = false;
   constructor() { }
+  
+  get signedIn() { return this._signedIn }
 }
