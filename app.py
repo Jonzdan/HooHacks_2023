@@ -62,17 +62,20 @@ def Custom_OCR(full_path):
     return items
     #return {"Salt":1.23,"Milk":2.33,"Tax:":0.66}
 
+
 @app.route('/uploadImage' , methods=['POST'])
 def uploadImage():
 
     # get request
     input_data = request.get_json()
-
+    #print(input_data['image'], file=sys.stderr)
+    #print(input_data['image_name'], file=sys.stderr)
     # get data from request
     try:
         file = Image.open(BytesIO(base64.b64decode(input_data['image']))) ## byte file
         file_name = input_data['image_name']
         full_path = "Backend/Uploaded_Images/"+file_name
+        
     except:
         result = {"error": "There is an error in sending data to the API endpoint."}
         return result
@@ -85,7 +88,9 @@ def uploadImage():
         return result
 
     # pass file to OCR
+    
     records = Custom_OCR(full_path)
+    #print(records, full_path, file=sys.stderr)
 
     # make result
     if(len(records)>0):
@@ -111,7 +116,7 @@ def uploadData():
 
     # get data from request
     try:
-        document = input_data['result']
+        document = input_data['records']
     except:
         result = {"error": "There is an error in sending data to the API endpoint."}
         return result
@@ -137,7 +142,7 @@ def uploadData():
     return result
 
 
-@app.route('/getData' , methods=['GET'])
+@app.route('/getData' , methods=['POST'])
 def getData():
     # get request
     input_data = request.get_json()
