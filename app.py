@@ -2,6 +2,10 @@ from flask import Flask, render_template , request , jsonify
 from PIL import Image
 import os , io , sys
 import pymongo
+import json
+import re
+import config as cfg
+from datetime import datetime,date, timedelta
 from pymongo import MongoClient
 from io import BytesIO
 import numpy as np 
@@ -11,10 +15,11 @@ import pytesseract
 import re
 
 app = Flask(__name__)
+
 pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
-cluster = MongoClient("mongodb+srv://meetgandhi1415:HooHacks2023@cluster0.c966xog.mongodb.net/?retryWrites=true&w=majority")
-db=cluster['receipt']
-collection = db['receipt']
+cluster = MongoClient(cfg.configurations['MongoClient'])
+db=cluster[cfg.configurations['db']]
+collection = db[cfg.configurations['collection']]
 
 
 def letterify(input):
@@ -82,10 +87,6 @@ def uploadImage():
     # pass file to OCR
     records = Custom_OCR(full_path)
 
-    # Add into database
-    post={"data":records, "date":"25-03-2023", "time":"20:50:00"}
-    collection.insert_one(post)
-
     # make result
     if(len(records)>0):
         result = {  
@@ -101,6 +102,94 @@ def uploadImage():
 
 
     return result
+
+
+@app.route('/uploadData' , methods=['POST'])
+def uploadData():
+    # get request
+    input_data = request.get_json()
+
+    # get data from request
+    try:
+        document = input_data['result']
+    except:
+        result = {"error": "There is an error in sending data to the API endpoint."}
+        return result
+    
+    # get date and time.
+    now = datetime.now()
+    date = now.strftime("%y-%m-%d")
+    time = now.strftime("%H:%M:%S")
+
+    # Add into database        
+    try:
+        post={"data":document,"date":date, "time":time}    
+        collection.insert_one(post)
+
+        result = {  
+            'status':"True"
+                }
+    except: 
+        result = {  
+            'status':"False"
+                }
+    
+    return result
+
+
+@app.route('/getData' , methods=['GET'])
+def getData():
+    # get request
+    input_data = request.get_json()
+
+    # get data from request
+    try:
+        range = input_data['range']
+        if range in ['Today','This Week','This Year']:
+            pass
+        else:
+            result = {"error": "Date range is not valid."}
+            return result
+
+    except:
+        result = {"error": "There is an error in sending data to the API endpoint."}
+        return result
+
+    if(range=='Today'):
+        now = datetime.now()
+        range = now.strftime("%y-%m-%d")
+        db_result = collection.find({"date":range})
+
+    elif(range=='This Week'):
+        today = date.today()
+        start = today - timedelta(days=today.weekday())        
+        end = start + timedelta(days=6)
+        start = str(start)[2:]
+        end = str(end)[2:]
+        db_result = collection.find({"date": {"$gte": start, "$lte": end}})        
+
+    else:
+        today = date.today()
+        year=str(today.year)
+        year = re.compile(year[2:]+".*", re.IGNORECASE)        
+        db_result = collection.find({"date": year})
+    
+    result=[]
+    for x in db_result:
+        temp={}
+        if('data' in x):
+            temp['data']=x['data']
+        if('date' in x):
+            temp['date']=x['date']
+        if('time' in x):
+            temp['time']=x['time']        
+        result.append(temp)
+
+    if len(result)>0:
+        return result
+    else:
+        result = {"status": "No Data Found."}
+        return result
 
 
 if __name__ == '__main__':
