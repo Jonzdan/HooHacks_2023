@@ -3,8 +3,9 @@ from PIL import Image
 import os , io , sys
 import pymongo
 import json
+import re
 import config as cfg
-from datetime import datetime
+from datetime import datetime,date, timedelta
 from pymongo import MongoClient
 from io import BytesIO
 import numpy as np 
@@ -117,7 +118,7 @@ def uploadData():
     
     # get date and time.
     now = datetime.now()
-    date = now.strftime("%d-%m-%Y")
+    date = now.strftime("%y-%m-%d")
     time = now.strftime("%H:%M:%S")
 
     # Add into database        
@@ -134,6 +135,62 @@ def uploadData():
                 }
     
     return result
+
+
+@app.route('/getData' , methods=['GET'])
+def getData():
+    # get request
+    input_data = request.get_json()
+
+    # get data from request
+    try:
+        range = input_data['range']
+        if range in ['Today','This Week','This Year']:
+            pass
+        else:
+            result = {"error": "Date range is not valid."}
+            return result
+
+    except:
+        result = {"error": "There is an error in sending data to the API endpoint."}
+        return result
+
+    if(range=='Today'):
+        now = datetime.now()
+        range = now.strftime("%y-%m-%d")
+        db_result = collection.find({"date":range})
+
+    elif(range=='This Week'):
+        today = date.today()
+        start = today - timedelta(days=today.weekday())        
+        end = start + timedelta(days=6)
+        start = str(start)[2:]
+        end = str(end)[2:]
+        db_result = collection.find({"date": {"$gte": start, "$lte": end}})        
+
+    else:
+        today = date.today()
+        year=str(today.year)
+        year = re.compile(year[2:]+".*", re.IGNORECASE)        
+        db_result = collection.find({"date": year})
+    
+    result=[]
+    for x in db_result:
+        temp={}
+        if('data' in x):
+            temp['data']=x['data']
+        if('date' in x):
+            temp['date']=x['date']
+        if('time' in x):
+            temp['time']=x['time']        
+        result.append(temp)
+
+    if len(result)>0:
+        return result
+    else:
+        result = {"status": "No Data Found."}
+        return result
+
 
 if __name__ == '__main__':
     app.run(debug = True)
