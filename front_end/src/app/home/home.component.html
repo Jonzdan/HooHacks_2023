@@ -12,15 +12,18 @@
             </div>
         </form> 
     </div>
-    
-    
+    <div class="absolute w-fit h-fit m-auto flex justify-center flex-row text-black bg-black z-[200] ">
+        <h2 > {{ progressText }} hi?</h2>
+    </div>
 </div>
+
+
 <div class="w-full h-full fixed bg-gray-500/30 mx-auto justify-items-center z-50" *ngIf="confirmPopUp">
     <form #form [formGroup]="confirmImage" (ngSubmit)="confirmDetails($event)" class="bg-neutral-100 overflow-auto rounded-lg text-lg min-w-[50%] max-w-[60%] translate-y-[1vh] h-[90%] justify-center flex flex-col self-center m-auto p-2">
         <div class="text-center">
             <h2> {{confirmData.file_name}}</h2>
         </div>
-        <div *ngFor="let item of confirmData.records | keyvalue; let i = index" class="flex flex-row text-center w-full p-1 border-b border-b-gray-800/50 ">
+        <div *ngFor="let item of confirmData.result | keyvalue; let i = index" class="flex flex-row text-center w-full p-1 border-b border-b-gray-800/50 ">
             <label contenteditable="true" for="name" class="hover:cursor-text mx-1 text-right w-full outline-none focus:placeholder:text-transparent">{{item.key}}:</label>
             <h2 contenteditable="true" class="text-left w-full outline-none focus:placeholder:text-transparent">${{item.value}}</h2>   
         </div>
@@ -34,10 +37,9 @@
 </div>
 <div class="w-full h-full fixed bg-gray-500/30 mx-auto z-50 overflow-scroll" *ngIf="finishedPopUp">
     <div class="bg-neutral-100 rounded-lg text-lg min-w-[50%] max-w-[60%] translate-y-[1vh] h-[90%] justify-center flex flex-col self-center m-auto p-2">
-       <h2 class="text-center"> Succesfully Uploaded Image! </h2>
+       <h2 class="text-center"> {{finishedPopUpText}} </h2>
         <button type="button" class="absolute w-fit h-fit justify-end flex right-[8px] top-0 m-0" (click)="closeFinishedPopUp($event)">
             &#10005;
         </button> 
     </div>
-    
 </div>

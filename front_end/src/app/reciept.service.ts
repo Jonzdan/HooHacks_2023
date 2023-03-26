@@ -9,9 +9,12 @@ import { NavbarService } from './navbar.service';
 export class RecieptService {
 
   
-  private _data?:any 
+  private _data?:any
+  private _chartData?:any 
+  private _readyChart:boolean = false
   private _loaded:boolean = false
   apiEndPoint:string = '/getData'
+  charApiEndPoint:string = '/getChartData'
   constructor(private http: HttpClient, private navbar:NavbarService) { }
 
   pullData(str:string) {
@@ -27,12 +30,24 @@ export class RecieptService {
     })
   }
 
+  pullChartData(str:string) {
+    this.http.post(this.charApiEndPoint, {'range':str}, {}).subscribe((res)=> {
+      this._chartData = res
+      console.log(res)
+      this._readyChart = true
+    })
+  }
+
   resetData():void {
     this._data = undefined
     this._loaded = false
   }
 
+
+
   get data() { return this._data}
   get loaded() { return this._loaded}
+  get chartData() { return this._chartData}
+  get readyChart() { return this._readyChart}
 
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,9 @@ export class ImageService {
   private _confirmData:any = {}
   private _confirmPopup:boolean = false
   private _loading:boolean = false;
+  public loadingBS:BehaviorSubject<boolean> = new BehaviorSubject(false)
   private _finishedPopUp:boolean = false;
+  finishedPopUpText:string = "Successfully Uploaded Image!"
   constructor(private http:HttpClient) { }
 
   submitToEndpoint() {
@@ -34,11 +36,12 @@ export class ImageService {
 
     }).pipe(
       tap((e) => {
-        this._loading = true;
+        this._loading = true; this.loadingBS.next(true)
       })
     ).subscribe((res)=> {
       this._confirmData = res
       this._confirmPopup = true;
+      this._loading = false; this.loadingBS.next(false)
     })
   }
 
@@ -46,12 +49,15 @@ export class ImageService {
     if (!(obj instanceof Object)) return
     if (!this.checkFields(obj)) { alert('Receipt unable to be processed');return}
     this._confirmData = obj
+    this._loading = true; this.loadingBS.next(true)
     this.http.post(this.cApiEndPoint, this._confirmData, {
 
-    }).subscribe((res) => {
+    }).subscribe((res:any) => {
+      if (res.error !== undefined) { this.finishedPopUpText="Unable to confirm Image. Please Try Again."  }
       this._confirmPopup = false
       this._finishedPopUp = true;
       this.resetFiles()
+      this._loading = false; this.loadingBS.next(false)
     })
   }
 
@@ -63,6 +69,7 @@ export class ImageService {
         }
       }
       else { */
+      console.log(fields)
       if (this._confirmData[fields] === undefined) return false
       if (fields === "status" && this._confirmData[fields] === 'False') return false
       
