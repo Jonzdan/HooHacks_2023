@@ -12,6 +12,7 @@ export class HomeComponent {
   uploadImage!:FormGroup
   confirmImage!:FormGroup
   @ViewChildren('form') fields!: QueryList<any | any[]>
+  progressText:string = "Submitting"
 
   constructor(private img: ImageService, private elementRef:ElementRef) {
 
@@ -22,6 +23,38 @@ export class HomeComponent {
       image: new FormControl( '', {}),
     })
     this.confirmImage = new FormGroup({})
+    this.img.finishedPopUpText = "Successfully Uploaded Image"
+    this.img.loadingBS.subscribe((res)=>{
+      if (res === true) {
+          switch (this.progressText) {
+            case "Submitting": {
+              setTimeout(() => {
+                this.progressText = "Submitting."
+              }, 300);
+              break
+            }
+            case "Submitting.": {
+              setTimeout(() => {
+                this.progressText = "Submitting.."
+              }, 300);
+              break
+            }
+            case "Submitting..": {
+              setTimeout(() => {
+                this.progressText = "Submitting..."
+              }, 300);
+              break
+            }
+            case "Submitting...": {
+              setTimeout(() => {
+                this.progressText = "Submitting"
+              }, 300);
+              break
+            }
+
+          }
+      }
+    })
   }
 
   imageSubmit(e:any) {
@@ -30,7 +63,7 @@ export class HomeComponent {
 
   confirmDetails(e:any) {
     const obj = structuredClone(this.confirmData)
-    obj['records'] = {}
+    obj['result'] = {}
     let firstOrNot = false
     if (this.fields.first.nativeElement.children.length-3 !== Object.keys(this.confirmData).length) {
       return 
@@ -42,7 +75,7 @@ export class HomeComponent {
         name = htmlElem.firstElementChild.textContent
       }
       let value = htmlElem.lastElementChild.textContent.slice(1)
-      if (firstOrNot) { obj.records[name] = Number(value) }
+      if (firstOrNot) { obj.result[name] = Number(value) }
       if (!firstOrNot) firstOrNot = true
     }
     this.img.finalSubmitToEndPoint(obj)
@@ -65,6 +98,7 @@ export class HomeComponent {
 
   closePopUp(e:any) {
     this.img.confirmPopUp = false
+    this.img.finishedPopUpText = "Successfully Uploaded Image"
   }
 
   resetFile(e:any) {
@@ -76,6 +110,7 @@ export class HomeComponent {
     this.img.finishedPopUp = false;
   }
 
+  get finishedPopUpText() { return this.img.finishedPopUpText}
   get confirmPopUp() { return this.img.confirmPopUp }
   get loading() { return this.img.loading }
   get confirmData() { return this.img.confirmData }

@@ -1,3 +1,18 @@
-<div class="w-full">
-    *insert pie chart*
+<div class="w-full h-fit my-auto ">
+    <div class="flex flex-grow-[2] flex-col self-end">
+        <h2 class="indent-2"> Organize By: </h2>
+        <select (change)="onChange($event)"  name="" id="" class="flex-grow-[2] content-evenly mx-2 outline-none">
+            <option value="Today">Today</option>
+            <option value="This Week">This Week</option>
+            <option value="This Year">This Year</option>
+        </select> 
+        
+    </div>
+    <button (click)="updateChartData($event)" class="h-fit px-1 mt-1 ml-2 bg-neutral-200 rounded-md"> GO </button>
+    <table class="mx-auto">
+        <tr *ngFor="let obj of chartData | keyvalue" class="border border-black">
+            <td class="border-r border-black p-1">{{obj.key}}: </td>
+            <td class="p-1">${{obj.value}}</td>
+        </tr>
+    </table>
 </div>
