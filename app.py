@@ -97,7 +97,7 @@ def uploadImage():
         result = {  
                     'status':"True",
                     "file_name":file_name,
-                    "records":records
+                    "result":records
                 }
     else:
         result = {  
@@ -116,7 +116,7 @@ def uploadData():
 
     # get data from request
     try:
-        document = input_data['records']
+        document = input_data['result']
     except:
         result = {"error": "There is an error in sending data to the API endpoint."}
         return result
@@ -146,7 +146,6 @@ def uploadData():
 def getData():
     # get request
     input_data = request.get_json()
-
     # get data from request
     try:
         range = input_data['range']
@@ -196,6 +195,58 @@ def getData():
         result = {"status": "No Data Found."}
         return result
 
+@app.route('/getChartData' , methods=['POST'])
+def getChartData():
+    # get request
+    input_data = request.get_json()
+ 
+    # get data from request
+    try:
+        range = input_data['range']
+        if range in ['Today','This Week','This Year']:
+            pass
+        else:
+            result = {"error": "Date range is not valid."}
+            return result
 
+    except:
+        result = {"error": "There is an error in sending data to the API endpoint."}
+        return result
+
+    if(range=='Today'):
+        now = datetime.now()
+        range = now.strftime("%y-%m-%d")
+        db_result = collection.find({"date":range})
+
+    elif(range=='This Week'):
+        today = date.today()
+        start = today - timedelta(days=today.weekday())        
+        end = start + timedelta(days=6)
+        start = str(start)[2:]
+        end = str(end)[2:]
+        db_result = collection.find({"date": {"$gte": start, "$lte": end}})        
+
+    else:
+        today = date.today()
+        year=str(today.year)
+        year = re.compile(year[2:]+".*", re.IGNORECASE)        
+        db_result = collection.find({"date": year})
+    
+    result={}
+    for x in db_result:
+        if('data' in x):
+            for i in x['data']:
+                if i.lower()!='total':
+                    if i not in result:
+                        result[i]=float(x['data'][i])
+                    else:
+                        result[i]+=float(x['data'][i])
+
+    if len(result)>0:
+        return result
+    else:
+        result = {"status": "No Data Found."}
+        return result
+    
 if __name__ == '__main__':
     app.run(debug = True)
