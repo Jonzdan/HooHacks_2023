@@ -3,8 +3,26 @@
        <h2 class="my-auto h-full w-full"> SCORE </h2>  
     </div>
     <form [formGroup]="uploadImage" (ngSubmit)="imageSubmit($event)" class=" mx-auto w-full h-full flex flex-col justify-center my-auto text-center items-center">
-        <label for="image"> Please Upload An Image/Pdf of your Receipt</label>
+        <label for="image"> Please Upload An Image of your Receipt</label>
         <input formControlName="image" type="file" name="image" id="image" (change)="onChange($event)"> <!-- what doc types are we accepting? -->
-        <button type="submit"> SUBMIT </button>
+        <button type="submit" class="bg-slate-300 px-1 rounded-sm"> SUBMIT </button>
     </form>
+    
+</div>
+<div class="w-full h-full fixed bg-gray-500/30 mx-auto justify-items-center z-50 overflow-scroll" *ngIf="confirmPopUp">
+    <form #form [formGroup]="confirmImage" (ngSubmit)="confirmDetails($event)" class="bg-neutral-100 rounded-lg text-lg min-w-[50%] max-w-[60%] translate-y-[1vh] h-[90%] justify-center flex flex-col self-center m-auto p-2">
+        <div class="text-center">
+            <h2> {{confirmData.file_name}}</h2>
+        </div>
+        <div *ngFor="let item of confirmData.records | keyvalue; let i = index" class="flex flex-row text-center w-full p-1 border-b border-b-gray-800/50 ">
+            <label contenteditable="false" for="name" class="hover:cursor-text mx-1 text-right w-full outline-none focus:placeholder:text-transparent">{{item.key}}:</label>
+            <h2 contenteditable="true" class="text-left w-full outline-none focus:placeholder:text-transparent">${{item.value}}</h2>   
+        </div>
+        <button type="button" class="absolute w-fit h-fit justify-end flex right-[8px] top-0 m-0" (click)="closePopUp($event)">
+            &#10005;
+        </button>
+        <button type="submit" class="bg-slate-300 px-1 rounded-sm w-fit mx-auto my-1"> Confirm Details </button>
+    </form>
+    
+    
 </div>

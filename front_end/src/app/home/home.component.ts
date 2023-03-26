@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, QueryList, ViewChildren } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ImageService } from '../image.service';
 
@@ -10,6 +10,9 @@ import { ImageService } from '../image.service';
 export class HomeComponent {
 
   uploadImage!:FormGroup
+  confirmImage!:FormGroup
+  @ViewChildren('form') fields!: QueryList<any | any[]>
+
   constructor(private img: ImageService) {
 
   }
@@ -18,11 +21,25 @@ export class HomeComponent {
     this.uploadImage= new FormGroup({
       image: new FormControl( '', {}),
     })
+    this.confirmImage = new FormGroup({})
   }
 
   imageSubmit(e:any) {
-    const apiEndpoint = ""
+    console.log(123)
     this.img.submitToEndpoint()
+  }
+
+  confirmDetails(e:any) {
+    const obj = structuredClone(this.confirmData)
+    console.log(this.confirmData)
+    for (const htmlElem of this.fields.first.nativeElement.children) {
+      if (htmlElem.nodeName !== 'DIV') break
+      let name = htmlElem.firstElementChild.textContent.slice(0, (htmlElem.firstElementChild.textContent as string).length - 1)
+      let value = htmlElem.lastElementChild.textContent.slice(1)
+      if (this.confirmData.records[name] === undefined) return 
+      obj.records[name] = Number(value)
+    }
+    this.img.finalSubmitToEndPoint(obj)
   }
 
   async onChange(e:any) {
@@ -36,6 +53,14 @@ export class HomeComponent {
     }
     
   }
+
+  closePopUp(e:any) {
+    this.img.confirmPopUp = false
+  }
+
+  get confirmPopUp() { return this.img.confirmPopUp }
+  get loading() { return this.img.loading }
+  get confirmData() { return this.img.confirmData }
 
   
 
