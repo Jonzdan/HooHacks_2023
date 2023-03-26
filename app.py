@@ -2,6 +2,9 @@ from flask import Flask, render_template , request , jsonify
 from PIL import Image
 import os , io , sys
 import pymongo
+import json
+import config as cfg
+from datetime import datetime
 from pymongo import MongoClient
 from io import BytesIO
 import numpy as np 
@@ -11,10 +14,11 @@ import pytesseract
 import re
 
 app = Flask(__name__)
+
 pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
-cluster = MongoClient("mongodb+srv://meetgandhi1415:HooHacks2023@cluster0.c966xog.mongodb.net/?retryWrites=true&w=majority")
-db=cluster['receipt']
-collection = db['receipt']
+cluster = MongoClient(cfg.configurations['MongoClient'])
+db=cluster[cfg.configurations['db']]
+collection = db[cfg.configurations['collection']]
 
 
 def letterify(input):
@@ -82,10 +86,6 @@ def uploadImage():
     # pass file to OCR
     records = Custom_OCR(full_path)
 
-    # Add into database
-    post={"data":records, "date":"25-03-2023", "time":"20:50:00"}
-    collection.insert_one(post)
-
     # make result
     if(len(records)>0):
         result = {  
@@ -102,6 +102,38 @@ def uploadImage():
 
     return result
 
+
+@app.route('/uploadData' , methods=['POST'])
+def uploadData():
+    # get request
+    input_data = request.get_json()
+
+    # get data from request
+    try:
+        document = input_data['result']
+    except:
+        result = {"error": "There is an error in sending data to the API endpoint."}
+        return result
+    
+    # get date and time.
+    now = datetime.now()
+    date = now.strftime("%d-%m-%Y")
+    time = now.strftime("%H:%M:%S")
+
+    # Add into database        
+    try:
+        post={"data":document,"date":date, "time":time}    
+        collection.insert_one(post)
+
+        result = {  
+            'status':"True"
+                }
+    except: 
+        result = {  
+            'status':"False"
+                }
+    
+    return result
 
 if __name__ == '__main__':
     app.run(debug = True)
