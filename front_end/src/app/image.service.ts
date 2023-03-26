@@ -7,12 +7,14 @@ import { tap } from 'rxjs';
 })
 export class ImageService {
 
-  private apiEndPoint:string = ""
-  private _file!: File
-  private _base64Image!:any 
+  private apiEndPoint:string = "/uploadImage"
+  private cApiEndPoint:string = "/uploadData"
+  private _file?: File
+  private _base64Image?:any 
   private _confirmData:any = {}
   private _confirmPopup:boolean = false
   private _loading:boolean = false;
+  private _finishedPopUp:boolean = false;
   constructor(private http:HttpClient) { }
 
   submitToEndpoint() {
@@ -26,8 +28,9 @@ export class ImageService {
       },
       "status": "True"
     } */
-    this._confirmPopup = true
-    this.http.post(this.apiEndPoint, this._base64Image, {
+    if (!this._file || !this._base64Image) return
+    const obj = {'image':this._base64Image, 'image_name':this._file.name}
+    this.http.post(this.apiEndPoint, obj, {
 
     }).pipe(
       tap((e) => {
@@ -41,12 +44,14 @@ export class ImageService {
 
   finalSubmitToEndPoint(obj:Object) {
     if (!(obj instanceof Object)) return
-    if (!this.checkFields(obj)) return
+    if (!this.checkFields(obj)) { alert('Receipt unable to be processed');return}
     this._confirmData = obj
-    this.http.post(this.apiEndPoint, this._confirmData, {
+    this.http.post(this.cApiEndPoint, this._confirmData, {
 
     }).subscribe((res) => {
-
+      this._confirmPopup = false
+      this._finishedPopUp = true;
+      this.resetFiles()
     })
   }
 
@@ -59,6 +64,7 @@ export class ImageService {
       }
       else { */
       if (this._confirmData[fields] === undefined) return false
+      if (fields === "status" && this._confirmData[fields] === 'False') return false
       
     }
     return true
@@ -73,12 +79,17 @@ export class ImageService {
     })
   } 
 
+  resetFiles():void {
+    this._file = undefined
+    this._base64Image = undefined
+  }
   
-
+  get finishedPopUp() { return this._finishedPopUp }
   get loading() { return this._loading}
   get confirmData() { return this._confirmData}
   get confirmPopUp() { return this._confirmPopup }
-  set confirmPopUp(e:boolean) { console.log(this._confirmPopup); this._confirmPopup = e }
+  set confirmPopUp(e:boolean) { this._confirmPopup = e }
+  set finishedPopUp(e:boolean) { this._finishedPopUp = e; }
   set base64Image(str:any) { this._base64Image = str}
   set file(arg:File) { 
     if (!(arg instanceof File )) { return }

@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HooHacks</title>
 </head>
-<body class="w-[100vw] h-[100vh] bg-blue-50">
+<body class="w-[100vw] h-[100vh] bg-blue-50 overflow-hidden min-w-[260px] transition-[margin-left] duration-300" [ngClass]="{'overflow-hidden ml-[-250px] ':showIconMenu, ' ml-0 ': !showIconMenu}">
   <app-navbar></app-navbar>
   <router-outlet></router-outlet>
 </body>

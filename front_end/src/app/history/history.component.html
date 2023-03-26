@@ -1,1 +1,68 @@
-<p>history works!</p>
+<div class="w-full">
+    <form [formGroup]="categories" (ngSubmit)="onSubmit($event)" class="flex flex-row w-full overflow-hidden pl-2 bg-slate-200 pb-2"> 
+        <div class="flex flex-grow flex-col">
+            <h2 class="indent-1"> Selector: </h2>
+            <select (change)="onChange($event)" name="type" id="" formControlName="selector">
+                <option value="report">Report</option>
+                <option value="search">Search</option>
+                <option value="spec_date">Specific Date</option>
+            </select>
+        </div>
+        
+        <div *ngIf="typeOfSelector=='Report'" class="flex flex-grow-[2] flex-col self-end">
+            <h2 class="indent-2"> Organize By: </h2>
+            <select  name="" id="" class="flex-grow-[2] content-evenly mx-2 outline-none" formControlName="reportCat">
+                <option value="Today">Today</option>
+                <option value="This Week">This Week</option>
+                <option value="This Year">This Year</option>
+            </select> 
+        </div>
+        
+        <div *ngIf="typeOfSelector=='Date'" class="flex flex-grow-[2] flex-col">
+            <h2 class="indent-2"> Organize By: </h2>
+            <input  type="date" name="" id="" class="flex-grow-[2] content-evenly mx-2 outline-none" formControlName="dateCat">
+        </div>
+        <div *ngIf="typeOfSelector=='Search'" class="flex flex-grow-[2] flex-col">
+            <h2 class="indent-2"> Organize By: </h2>
+            <div class="relative flex flex-row flex-grow-[2] items-end justify-end overflow-hidden">
+                <input  formControlName="searchCat" class="relative" type="search" name="" id="" placeholder="Search..." class="flex-grow-[2] content-evenly mx-2 indent-2 focus:placeholder:text-transparent outline-none">
+                <svg class="absolute self-center hover:cursor-pointer mr-3" fill="#000000" height="16px" width="16px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 490.4 490.4" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M484.1,454.796l-110.5-110.6c29.8-36.3,47.6-82.8,47.6-133.4c0-116.3-94.3-210.6-210.6-210.6S0,94.496,0,210.796 s94.3,210.6,210.6,210.6c50.8,0,97.4-18,133.8-48l110.5,110.5c12.9,11.8,25,4.2,29.2,0C492.5,475.596,492.5,463.096,484.1,454.796z M41.1,210.796c0-93.6,75.9-169.5,169.5-169.5s169.6,75.9,169.6,169.5s-75.9,169.5-169.5,169.5S41.1,304.396,41.1,210.796z"></path> </g> </g></svg>
+            </div>
+        </div>
+        
+        <div class="flex flex-col flex-grow">
+            <h2 class="indent-2"> Sort: </h2>
+            <select name="" id="" class="flex-grow content-evenly mx-2 outline-none" formControlName="sort">
+                <option *ngIf="typeOfSelector != 'Date'" value="date">Date</option>
+                <option value="price">Price</option>
+            </select>
+        </div>
+        <div class="flex flex-col flex-grow">
+            <h2 class="indent-2"> Sort By: </h2>
+            <select name="" id="" class="flex-grow content-evenly mx-2 outline-none" formControlName="sortBy">
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+            </select>
+        </div>
+        <button type="submit" class="flex-grow self-end bg-neutral-50 rounded-md hover:bg-neutral-100"> GO </button>
+        
+        
+    </form> <!-- options -->
+    <div class="" *ngIf="loaded"> 
+        <div *ngFor="let obj of data" class="flex flex-row w-[95%] mx-auto justify-center mt-1 overflow-auto bg-neutral-200 rounded-lg p-1 hover:cursor-pointer hover:bg-neutral-300">
+            <div *ngFor="let prop of obj.data | keyvalue" class="flex flex-grow flex-col mx-1 overflow-auto">
+                <h2 class="flex flex-grow" >{{prop.key}}: </h2>
+                <h2 class="flex flex-grow" >${{prop.value}}</h2>
+            </div>
+            <div class="flex flex-grow flex-col mx-1">
+                <h2 class="mr-1"> Time: </h2>
+                <h2>  {{obj.time}}</h2>
+            </div>
+            <div class="flex flex-grow flex-col mx-1">
+                <h2 class="mr-1"> Date: </h2>
+                <h2>  {{obj.date}}</h2>
+            </div>
+            
+        </div>
+    </div> <!-- display -->
+</div>
