@@ -30,4 +30,4 @@ Dillinger uses a number of open source projects to work properly:
 - [Angular] - HTML enhanced for web apps!
 - [Flask] - awesome web-based flask framework
 - [Google Tesseract] - OCR powered by google.
-- [MongoDB] - NoSQL dataset
+- [MongoDB] - NoSQL database
