@@ -25,7 +25,6 @@ export class HomeComponent {
   }
 
   imageSubmit(e:any) {
-    console.log(123)
     this.img.submitToEndpoint()
   }
 

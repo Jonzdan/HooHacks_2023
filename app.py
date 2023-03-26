@@ -51,19 +51,6 @@ def Custom_OCR(full_path):
     #return {"Salt":1.23,"Milk":2.33,"Tax:":0.66}
 
 
-@app.route('/confirmImage', methods=['POST'])
-def confirmImage():
-    input_data = request.get_json()
-    #{'file_name': 'test.jpeg', 'records': {'FACIAL ': 45, 'TOTAL': 16.8, 'TOTAL TAX': 1.8}, 'status': 'True'}
-    try:
-        #save to db
-        pass
-    except:
-
-        pass
-    result = {"msg": "Done"}
-    return result
-
 @app.route('/uploadImage' , methods=['POST'])
 def uploadImage():
 

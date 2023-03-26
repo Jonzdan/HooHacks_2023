@@ -28,8 +28,6 @@ export class ImageService {
       },
       "status": "True"
     } */
-    console.log(this._base64Image)
-    console.log(this._file.name)
     const obj = {'image':this._base64Image, 'image_name':this._file.name}
     this.http.post(this.apiEndPoint, obj, {
 
@@ -45,7 +43,7 @@ export class ImageService {
 
   finalSubmitToEndPoint(obj:Object) {
     if (!(obj instanceof Object)) return
-    if (!this.checkFields(obj)) return
+    if (!this.checkFields(obj)) { alert('Receipt unable to be processed');return}
     this._confirmData = obj
     this.http.post(this.cApiEndPoint, this._confirmData, {
 
