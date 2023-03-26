@@ -1,17 +1,37 @@
-<div class="sticky top-0 left-0 w-full h-fit p-2 flex flex-row bg-blue-600 items-end" *ngIf="!hideNavBar">
-    <div class="min-w-[30vw] max-w-[70vw] ml-auto flex flex-row self-center text-neutral-50 tracking-tight">
-        <div class="hover:cursor-pointer hover:text-blue-300 text-base mx-3 flex-nowrap whitespace-nowrap text-ellipsis block "> <!-- home -->
-            <h2> Home</h2>
+<div class="sticky top-0 left-0 w-full h-fit p-2 flex flex-row bg-blue-600 items-end align-middle py-2 z-50" *ngIf="!hideNavBar">
+    <div class="justify-start text-neutral-50 tracking-tighter mr-auto md:text-3xl text-2xl text">
+        <h2> <span class="md:text-4xl text-3xl">R</span>ECEIPT <span class="md:text-4xl text-3xl">R</span>OVER </h2>
+    </div>
+    <div *ngIf="!navBarToIcon"  class="min-w-[30vw] max-w-[70vw] ml-auto items-end justify-end flex flex-row self-center text-neutral-50 tracking-tight">
+        <div class="hover:cursor-pointer hover:text-blue-300 text-base mx-2 flex-nowrap whitespace-nowrap text-ellipsis block "> <!-- home -->
+            <h2 routerLink="/home"> Home</h2>
         </div>
-        <div class="hover:cursor-pointer hover:text-blue-300 text-base mx-3 flex-nowrap whitespace-nowrap text-ellipsis block "> <!-- history -->
-            <h2> History </h2>
+        <div class="hover:cursor-pointer hover:text-blue-300 text-base mx-2 flex-nowrap whitespace-nowrap text-ellipsis block "> <!-- history -->
+            <h2 routerLink="./history"> History </h2>
         </div>
-        <div class="hover:cursor-pointer hover:text-blue-300 text-base mx-3 flex-nowrap whitespace-nowrap text-ellipsis block "> <!-- spending-tracker -->
-            <h2> Spending Tracker </h2>
-        </div>
-        <div class="hover:cursor-pointer hover:text-blue-300 text-base mx-3 flex-nowrap whitespace-nowrap text-ellipsis block "> <!-- logout btn -->
-            <button class="" (click)="logout($event)"> Logout </button>
+        <div class="hover:cursor-pointer hover:text-blue-300 text-base mx-2 flex-nowrap whitespace-nowrap text-ellipsis block "> <!-- spending-tracker -->
+            <h2 routerLink="./spendingTracker"> Spending Tracker </h2>
         </div>
     </div>
-    
+    <div *ngIf="navBarToIcon" class="flex justify-end z-50 flex-row h-full w-fit py-2"> <!-- alt option when screen size gets too small-->
+        <svg *ngIf="!showIconMenu" class="hover:cursor-pointer self-center justify-center items-center flex h-full z-50" fill="#eaeadc" height="20px" width="20px" (click)="openSideBar($event)"  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 150 150" xml:space="preserve" stroke="#000000" stroke-width="0.0015"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="XMLID_240_"> <path id="XMLID_241_" d="M15,30h120c8.284,0,15-6.716,15-15s-6.716-15-15-15H15C6.716,0,0,6.716,0,15S6.716,30,15,30z"></path> <path id="XMLID_242_" d="M135,60H15C6.716,60,0,66.716,0,75s6.716,15,15,15h120c8.284,0,15-6.716,15-15S143.284,60,135,60z"></path> <path id="XMLID_243_" d="M135,120H15c-8.284,0-15,6.716-15,15s6.716,15,15,15h120c8.284,0,15-6.716,15-15S143.284,120,135,120z"></path> </g> </g></svg>
+        <!-- <div class="h-full my-auto ml-auto mr-3 hover:cursor-pointer text-[#eaeadc] text-4xl" *ngIf="showIconMenu" (click)="openSideBar($event)" type="button">&times;</div> -->
+    </div>
+    <ul class="z-30 fixed max-w-[100vw] transition-[width] ease-linear h-[100vh] top-0 bg-blue-800 overflow-x-hidden right-0 rounded-l-sm drop-shadow-sm shadow-md shadow-[#232D48] flex flex-col items-center text-lg content-evenly text-white" [ngClass]="{'w-[250px]': showIconMenu, 'w-[0px]': !showIconMenu}">
+        <li class="hover:cursor-pointer text-base my-1 mt-10 flex-nowrap whitespace-nowrap text-ellipsis block">
+            <h2 class="hover:text-blue-300" routerLink="./home"> Home </h2>
+        </li>
+        <li class="hover:cursor-pointer text-base my-1 flex-nowrap whitespace-nowrap text-ellipsis block">
+            <h2 class="hover:text-blue-300" routerLink="./history"> History </h2>
+        </li>
+        <li class="hover:cursor-pointer text-base my-1 flex-nowrap whitespace-nowrap text-ellipsis block">
+            <h2 class="hover:text-blue-300" routerLink="./spendingTracker"> Spending Tracker </h2>
+        </li>
+        <li class="absolute justify-end self-end flex-center m-3">
+            <button type="button" (click)="openSideBar($event)" class="scale-150">
+                &#10005;
+            </button>
+        </li>
+    </ul>
 </div>
+

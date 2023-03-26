@@ -116,7 +116,7 @@ def uploadData():
 
     # get data from request
     try:
-        document = input_data['result']
+        document = input_data['records']
     except:
         result = {"error": "There is an error in sending data to the API endpoint."}
         return result
@@ -142,7 +142,7 @@ def uploadData():
     return result
 
 
-@app.route('/getData' , methods=['GET'])
+@app.route('/getData' , methods=['POST'])
 def getData():
     # get request
     input_data = request.get_json()

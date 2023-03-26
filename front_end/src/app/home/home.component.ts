@@ -1,4 +1,4 @@
-import { Component, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ImageService } from '../image.service';
 
@@ -13,7 +13,7 @@ export class HomeComponent {
   confirmImage!:FormGroup
   @ViewChildren('form') fields!: QueryList<any | any[]>
 
-  constructor(private img: ImageService) {
+  constructor(private img: ImageService, private elementRef:ElementRef) {
 
   }
 
@@ -30,8 +30,11 @@ export class HomeComponent {
 
   confirmDetails(e:any) {
     const obj = structuredClone(this.confirmData)
-    console.log(this.confirmData)
+    obj['records'] = {}
     let firstOrNot = false
+    if (this.fields.first.nativeElement.children.length-3 !== Object.keys(this.confirmData).length) {
+      return 
+    }
     for (const htmlElem of this.fields.first.nativeElement.children) {
       if (htmlElem.nodeName !== 'DIV') break
       let name = htmlElem.firstElementChild.textContent.slice(0, (htmlElem.firstElementChild.textContent as string).length - 1)
@@ -39,11 +42,11 @@ export class HomeComponent {
         name = htmlElem.firstElementChild.textContent
       }
       let value = htmlElem.lastElementChild.textContent.slice(1)
-      if ((this.confirmData.records === undefined || this.confirmData.records[name] === undefined) && firstOrNot) { return }
       if (firstOrNot) { obj.records[name] = Number(value) }
       if (!firstOrNot) firstOrNot = true
     }
     this.img.finalSubmitToEndPoint(obj)
+    this.resetFile('')
   }
 
   async onChange(e:any) {
@@ -62,6 +65,11 @@ export class HomeComponent {
 
   closePopUp(e:any) {
     this.img.confirmPopUp = false
+  }
+
+  resetFile(e:any) {
+    this.elementRef.nativeElement.querySelector("#image").value = ""
+    this.img.resetFiles()
   }
 
   closeFinishedPopUp(e:any) {

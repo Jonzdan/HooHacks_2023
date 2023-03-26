@@ -8,9 +8,9 @@ import { tap } from 'rxjs';
 export class ImageService {
 
   private apiEndPoint:string = "/uploadImage"
-  private cApiEndPoint:string = "/confirmImage"
-  private _file!: File
-  private _base64Image!:any 
+  private cApiEndPoint:string = "/uploadData"
+  private _file?: File
+  private _base64Image?:any 
   private _confirmData:any = {}
   private _confirmPopup:boolean = false
   private _loading:boolean = false;
@@ -28,6 +28,7 @@ export class ImageService {
       },
       "status": "True"
     } */
+    if (!this._file || !this._base64Image) return
     const obj = {'image':this._base64Image, 'image_name':this._file.name}
     this.http.post(this.apiEndPoint, obj, {
 
@@ -50,7 +51,7 @@ export class ImageService {
     }).subscribe((res) => {
       this._confirmPopup = false
       this._finishedPopUp = true;
-
+      this.resetFiles()
     })
   }
 
@@ -78,6 +79,10 @@ export class ImageService {
     })
   } 
 
+  resetFiles():void {
+    this._file = undefined
+    this._base64Image = undefined
+  }
   
   get finishedPopUp() { return this._finishedPopUp }
   get loading() { return this._loading}

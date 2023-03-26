@@ -1,21 +1,27 @@
 <div class="w-full h-full fixed">
-    <div class="absolute top-[1vh] left-[1vw] min-w-[200px] min-h-[100px] border border-blue-400 text-center flex justify-center text-3xl"> 
+    <!-- <div class="absolute top-[1vh] left-[1vw] min-w-[200px] min-h-[100px] border border-blue-400 text-center flex justify-center text-3xl"> 
        <h2 class="my-auto h-full w-full"> SCORE </h2>  
+    </div> -->
+    <div class="w-full h-full m-auto flex justify-center">
+       <form [formGroup]="uploadImage" (ngSubmit)="imageSubmit($event)" class="m-auto w-fit h-fit p-2 flex flex-col justify-center text-center items-center bg-blue-300 shadow-md rounded-md ">
+            <label for="image"> Please Upload An Image of your Receipt</label>
+            <input formControlName="image" type="file" name="image" id="image" (change)="onChange($event)" class="mx-auto w-fit"> <!-- what doc types are we accepting? -->
+            <div class="flex flex-row mt-1">
+                <button type="button" class="bg-neutral-100 hover:bg-neutral-200 px-1 rounded-md mr-1" (click)="resetFile($event)"> Reset File </button>
+                <button type="submit" class="bg-neutral-100 hover:bg-neutral-200 px-1 rounded-md ml-1"> SUBMIT </button>
+            </div>
+        </form> 
     </div>
-    <form [formGroup]="uploadImage" (ngSubmit)="imageSubmit($event)" class=" mx-auto w-full h-full flex flex-col justify-center my-auto text-center items-center">
-        <label for="image"> Please Upload An Image of your Receipt</label>
-        <input formControlName="image" type="file" name="image" id="image" (change)="onChange($event)"> <!-- what doc types are we accepting? -->
-        <button type="submit" class="bg-slate-300 px-1 rounded-sm"> SUBMIT </button>
-    </form>
+    
     
 </div>
-<div class="w-full h-full fixed bg-gray-500/30 mx-auto justify-items-center z-50 overflow-scroll" *ngIf="confirmPopUp">
-    <form #form [formGroup]="confirmImage" (ngSubmit)="confirmDetails($event)" class="bg-neutral-100 rounded-lg text-lg min-w-[50%] max-w-[60%] translate-y-[1vh] h-[90%] justify-center flex flex-col self-center m-auto p-2">
+<div class="w-full h-full fixed bg-gray-500/30 mx-auto justify-items-center z-50" *ngIf="confirmPopUp">
+    <form #form [formGroup]="confirmImage" (ngSubmit)="confirmDetails($event)" class="bg-neutral-100 overflow-auto rounded-lg text-lg min-w-[50%] max-w-[60%] translate-y-[1vh] h-[90%] justify-center flex flex-col self-center m-auto p-2">
         <div class="text-center">
             <h2> {{confirmData.file_name}}</h2>
         </div>
         <div *ngFor="let item of confirmData.records | keyvalue; let i = index" class="flex flex-row text-center w-full p-1 border-b border-b-gray-800/50 ">
-            <label contenteditable="false" for="name" class="hover:cursor-text mx-1 text-right w-full outline-none focus:placeholder:text-transparent">{{item.key}}:</label>
+            <label contenteditable="true" for="name" class="hover:cursor-text mx-1 text-right w-full outline-none focus:placeholder:text-transparent">{{item.key}}:</label>
             <h2 contenteditable="true" class="text-left w-full outline-none focus:placeholder:text-transparent">${{item.value}}</h2>   
         </div>
         <button type="button" class="absolute w-fit h-fit justify-end flex right-[8px] top-0 m-0" (click)="closePopUp($event)">
