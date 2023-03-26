@@ -50,17 +50,33 @@ def Custom_OCR(full_path):
     return items
     #return {"Salt":1.23,"Milk":2.33,"Tax:":0.66}
 
+
+@app.route('/confirmImage', methods=['POST'])
+def confirmImage():
+    input_data = request.get_json()
+    #{'file_name': 'test.jpeg', 'records': {'FACIAL ': 45, 'TOTAL': 16.8, 'TOTAL TAX': 1.8}, 'status': 'True'}
+    try:
+        #save to db
+        pass
+    except:
+
+        pass
+    result = {"msg": "Done"}
+    return result
+
 @app.route('/uploadImage' , methods=['POST'])
 def uploadImage():
 
     # get request
     input_data = request.get_json()
-
+    #print(input_data['image'], file=sys.stderr)
+    #print(input_data['image_name'], file=sys.stderr)
     # get data from request
     try:
         file = Image.open(BytesIO(base64.b64decode(input_data['image']))) ## byte file
         file_name = input_data['image_name']
         full_path = "Backend/Uploaded_Images/"+file_name
+        
     except:
         result = {"error": "There is an error in sending data to the API endpoint."}
         return result
@@ -73,7 +89,9 @@ def uploadImage():
         return result
 
     # pass file to OCR
+    
     records = Custom_OCR(full_path)
+    #print(records, full_path, file=sys.stderr)
 
     # make result
     if(len(records)>0):

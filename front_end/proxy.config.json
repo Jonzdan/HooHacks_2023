@@ -1,0 +1,12 @@
+{
+    "/uploadImage/*": {
+        "target": "http://localhost:5000",
+        "secure": false,
+        "logLevel": "debug"
+    },
+    "/confirmImage/*": {
+        "target": "http://localhost:5000",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}

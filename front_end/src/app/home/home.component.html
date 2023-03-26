@@ -26,3 +26,12 @@
     
     
 </div>
+<div class="w-full h-full fixed bg-gray-500/30 mx-auto z-50 overflow-scroll" *ngIf="finishedPopUp">
+    <div class="bg-neutral-100 rounded-lg text-lg min-w-[50%] max-w-[60%] translate-y-[1vh] h-[90%] justify-center flex flex-col self-center m-auto p-2">
+       <h2 class="text-center"> Succesfully Uploaded Image! </h2>
+        <button type="button" class="absolute w-fit h-fit justify-end flex right-[8px] top-0 m-0" (click)="closeFinishedPopUp($event)">
+            &#10005;
+        </button> 
+    </div>
+    
+</div>
