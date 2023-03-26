@@ -1,6 +1,8 @@
 from flask import Flask, render_template , request , jsonify
 from PIL import Image
 import os , io , sys
+import pymongo
+from pymongo import MongoClient
 from io import BytesIO
 import numpy as np 
 import cv2
@@ -9,8 +11,12 @@ import pytesseract
 import re
 
 app = Flask(__name__)
-
 pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+cluster = MongoClient("mongodb+srv://meetgandhi1415:HooHacks2023@cluster0.c966xog.mongodb.net/?retryWrites=true&w=majority")
+db=cluster['receipt']
+collection = db['receipt']
+
+
 def letterify(input):
   l2=[]
   for idx,i in enumerate(input):
@@ -23,10 +29,11 @@ def Custom_OCR(full_path):
     img = cv2.imread(full_path)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     text = pytesseract.image_to_string(gray)
-    # Preprocessing the text starts
-    list1 = [l.split(' ') for l in text.splitlines()]
-    #gets purchased items of the bill
 
+    # Preprocessing the text starts    
+    list1 = [l.split(' ') for l in text.splitlines()]
+
+    #gets purchased items of the bill
     items={}
     for li in list1:
         if re.search("^\d+\.",li[-1])!=None and re.search("[a-z A-Z]",li[0])!= None:
@@ -74,6 +81,10 @@ def uploadImage():
 
     # pass file to OCR
     records = Custom_OCR(full_path)
+
+    # Add into database
+    post={"data":records, "date":"25-03-2023", "time":"20:50:00"}
+    collection.insert_one(post)
 
     # make result
     if(len(records)>0):
