@@ -35,6 +35,71 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5000/uploadData",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"result\":{\r\n        \"FACIAL \": 45.0,\r\n        \"TOTAL\": 16.8,\r\n        \"TOTAL TAX\": 1.8\r\n        }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/uploadData",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"uploadData"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:5000/getData",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"range\":\"This Year\"\r\n}\r\n//      \"range\":\"This Week\"\r\n//      \"range\":\"Today\"\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/getData",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"getData"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
