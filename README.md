@@ -25,7 +25,7 @@ ReceiptRover is a automated tool to track your sending from scanning the reciept
 
 ## Tech
 
-Dillinger uses a number of open source projects to work properly:
+ReceiptRover uses a number of open source projects to work properly:
 
 - [Angular] - HTML enhanced for web apps!
 - [Flask] - awesome web-based flask framework
